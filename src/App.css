@@ -1,0 +1,82 @@
+/* Global */
+html, body, .App {
+  height: 100%;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Lato", sans-serif;
+  scroll-behavior: smooth;
+}
+
+/* Hero Area */
+.hero-area {
+  background-image: url(./images/hero-area-bg.png);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: center center;
+  overflow: hidden;
+  width: 100%;
+  min-height: 100px;
+}
+
+/* Menu Header */
+.menu-line {
+  border-top: 3px solid #bbb;
+}
+
+/* Menu Item */
+.accordion__content {
+  max-height: 0em;
+  transition: all 0.4s ease-in-out;
+}
+input[name="card"]:checked ~ .accordion__content {
+  max-height: 50em;
+}
+
+/* Loader */
+.spinner {
+  display: block;
+  border-radius: 50%;
+  animation: rotation 0.6s infinite linear;
+  height: 1.5rem;
+  width: 1.5rem;
+  border: 3px solid transparent;
+  border-top-color: rgb(255, 255, 255, 0.9);
+}
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+/* Horizontal scroll bar in home navigation menu */
+.home-navigation::-webkit-scrollbar {
+  display: none;
+}
+.home-navigation {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Slide up view popup animations */
+.slide-up {
+  animation: slideUp 0.2s linear 0s;
+  height: 80vh;
+}
+.slide-down {
+  animation: slideDown 0.2s linear 0s;
+  height: 0;
+}
+@keyframes slideUp {
+  0% {height: 0;};
+  100% {height: 80vh;}
+}
+
+@keyframes slideDown {
+  0% {height: 80vh;};
+  100% {height: 0;}
+}
