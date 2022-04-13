@@ -5,7 +5,6 @@ import SingleMenuItem from '../components/SingleMenuItem';
 import { CartItemDTO, Category, ComboItem, MenuItemDTO } from '../utils/models';
 import { CartContext } from '../contexts/CartContext';
 import { Link } from 'react-router-dom';
-import ComboConfig from '../components/ComboConfig';
 import ComboForm from '../components/ComboForm';
 
 const Home = () => {
@@ -15,7 +14,6 @@ const Home = () => {
     const [activeTab, setActiveTab] = useState<Category>(Category.Combo);
     const [singleMenuItems, setSingleMenuItems] = useState<MenuItemDTO[]>([]);
     const [beverageMenuItems, setBeverageMenuItems] = useState<MenuItemDTO[]>([]);
-    const comboSection = useRef<null | HTMLHeadingElement>(null);
     const singleSection = useRef<null | HTMLHeadingElement>(null);
     const beverageSection = useRef<null | HTMLHeadingElement>(null);
     const [popUpVisible, setPopUpVisible] = useState(false);
@@ -56,7 +54,6 @@ const Home = () => {
             else if (intersectedSection === "beverageSection") setActiveTab(entry.isIntersecting ? Category.Single : Category.Beverage);
         }, { rootMargin: "-200px 10px 0px 10px" });
         oberserver.observe(singleSection.current as HTMLHeadingElement);
-        oberserver.observe(comboSection.current as HTMLHeadingElement);
         oberserver.observe(beverageSection.current as HTMLHeadingElement);
     }
 
@@ -86,16 +83,16 @@ const Home = () => {
         <div className={`App ${popUpVisible ? 'overflow-hidden' : ''}`}>
             <div className='w-full fixed top-0 z-10'>
                 {/* Hero Area */}
-                <div className='hero-area relative flex justify-center items-center'></div>
+                <div className='hero-area relative flex justify-center items-center'/>
 
                 {/* Navigation Bar*/}
                 <div className="w-full mb-1 flex flex-row items-center justify-between bg-gray-100">
                     <ul className="w-full grid grid-cols-3">
                         <button onClick={() => scrollToSection(Category.Combo)} className={"w-full mr-3 text-center block border rounded-r py-2 px-4 " + (activeTab === Category.Combo ? "bg-red-500 border-red-500 text-white" : "bg-gray-100 border-none")}>
-                            Combos
+                            Speciality Wraps
                         </button>
                         <button onClick={() => scrollToSection(Category.Single)} className={"w-full mr-3 text-center block border rounded py-2 px-4 " + (activeTab === Category.Single ? "bg-red-500 border-red-500 text-white" : "bg-gray-100 border-none")}>
-                            Singles
+                            Manouche
                         </button>
                         <button onClick={() => scrollToSection(Category.Beverage)} className={"w-full mr-3 text-center block border rounded-l py-2 px-4 " + (activeTab === Category.Beverage ? "bg-red-500 border-red-500 text-white" : "bg-gray-100 border-none")}>
                             Beverages
@@ -107,36 +104,7 @@ const Home = () => {
             {/* Body */}
             <div className="w-11/12 pb-24 mt-40">
 
-                <h1 ref={comboSection} className='comboSection text-3xl font-bold'>Combos</h1>
-                {[...Array(4)].map((el: any, idx: number) => (
-                    <ComboConfig key={idx + 1} comboNumber={idx + 1} selectedCombo={selectedCombo} setSelectedCombo={setSelectedCombo} setPopUpVisible={setPopUpVisible} />
-                ))}
-
                 <h1 ref={singleSection} className='singleSection text-3xl font-bold mt-5'>Singles</h1>
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
                 {singleMenuItems.map((item: MenuItemDTO) => (
                     <SingleMenuItem key={item.id} {...item} />
                 ))}
