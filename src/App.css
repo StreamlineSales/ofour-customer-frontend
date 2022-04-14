@@ -55,10 +55,10 @@ input[name="card"]:checked ~ .accordion__content {
 }
 
 /* Horizontal scroll bar in home navigation menu */
-.home-navigation::-webkit-scrollbar {
+.navigation-wrapper::-webkit-scrollbar {
   display: none;
 }
-.home-navigation {
+.navigation-wrapper {
   -webkit-overflow-scrolling: touch;
 }
 

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { CartContext } from "../contexts/CartContext";
 import { Link, useNavigate } from "react-router-dom";
-import { CartItemDTO, Category, ComboItem, MenuItemDTO, OrderDTO } from "../utils/models";
+import { CartItemDTO, Category, MenuItemDTO, OrderDTO } from "../utils/models";
 import { collection, doc, getDocs, orderBy, query, setDoc, where } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import toast from "react-hot-toast";
@@ -157,7 +157,6 @@ const Order = () => {
                         <div key={idx} className="w-full flex justify-between items-center p-4 border-t">
                             <div className='w-3/5'>
                                 <h1 className='text-xl'>{cartItem.title}</h1>
-                                {cartItem.content?.map((comboItem: ComboItem, idx: number) => <li key={idx} className="text-sm">{comboItem.title}</li>)}
                             </div>
                             <div className='flex justify-around items-center w-2/5'>
                                 <p>x{cartItem.count}</p>
