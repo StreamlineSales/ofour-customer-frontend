@@ -85,7 +85,7 @@ const Home = () => {
                 {/* Navigation Bar*/}
                 <div className="navigation-wrapper overflow-x-scroll whitespace-nowrap w-full mb-1 flex flex-row items-center justify-between bg-gray-100">
                     {Array.from(Array(8).keys()).map((category: Category) => (
-                        <button key={category} onClick={() => scrollToSection(category)} className={"w-fit-content max-w-xs mr-3 text-center block border rounded-r py-2 px-4 " + (activeTab === category ? "bg-red-500 border-red-500 text-white" : "bg-gray-100 border-none")}>
+                        <button key={category} onClick={() => scrollToSection(category)} className={"w-fit-content max-w-xs mr-3 text-center block border py-2 px-4 " + (category==0 ? "rounded-r " : category==7 ? "rounded-l " : "rounded ") + (activeTab === category ? "bg-red-500 border-red-500 text-white" : "bg-gray-100 border-none")}>
                             {getCategoryName(category)}
                         </button>
                     ))}
