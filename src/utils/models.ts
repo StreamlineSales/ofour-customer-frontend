@@ -1,5 +1,3 @@
-import { NumericLiteral } from "typescript";
-
 // Admin User
 export class UserDTO {
     email?: string;
@@ -7,15 +5,20 @@ export class UserDTO {
 
 // Menu Item
 export enum Category {
-    Single, // 0
-    Combo, // 1
-    Beverage // 2
+    SpecialityWrap, // 0
+    Manouche, // 1
+    Eggs, // 2
+    SpecialSub, // 3
+    Side, // 4
+    ColdDishes, // 5
+    Desserts, // 6
+    Beverages // 7
 }
+
 export class MenuItemDTO {
     id!: string;
     title!: string; // always
     category!: Category; // always
-    type!: string; // if category == Combo, values:"meat" or "vegetable"
     price!: number; // if category != Combo
     description!: string; // always
     image!: string | null; // if category != Combo
@@ -36,22 +39,8 @@ export class OrderDTO {
 }
 
 // Cart Item
-export enum CartItemType {
-    NonCombo, // 0 
-    Combo, // 1
-}
-export class ComboItem {
-    title!: string;
-    type!: string // "meat" or "vegetable"
-    constructor(type: string) {
-        this.title = "";
-        this.type = type;
-    }
-}
 export class CartItemDTO {
-    type!: CartItemType // always
     title!: string; // always
     price!: number; // always
     count!: number; // always
-    content?: ComboItem[] | null; // if type == Combo, list of combo items
 }

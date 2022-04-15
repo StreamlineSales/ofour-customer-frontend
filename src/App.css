@@ -15,7 +15,7 @@ html, body, .App {
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  position: center center;
+  position: center;
   overflow: hidden;
   width: 100%;
   min-height: 100px;
@@ -55,10 +55,10 @@ input[name="card"]:checked ~ .accordion__content {
 }
 
 /* Horizontal scroll bar in home navigation menu */
-.home-navigation::-webkit-scrollbar {
+.navigation-wrapper::-webkit-scrollbar {
   display: none;
 }
-.home-navigation {
+.navigation-wrapper {
   -webkit-overflow-scrolling: touch;
 }
 
@@ -72,11 +72,11 @@ input[name="card"]:checked ~ .accordion__content {
   height: 0;
 }
 @keyframes slideUp {
-  0% {height: 0;};
+  0% {height: 0;}
   100% {height: 80vh;}
 }
 
 @keyframes slideDown {
-  0% {height: 80vh;};
+  0% {height: 80vh;}
   100% {height: 0;}
 }

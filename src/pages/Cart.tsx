@@ -86,14 +86,14 @@ const Cart = () => {
             </div>
 
             {/* Continue Button (continue without payment) */}
-            {/* <Link to="/order" className="flex justify-center items-center w-1/2 mt-4 bg-red-600 text-white text-sm px-4 py-4 rounded-full">
+            <Link to="/order" className="flex justify-center items-center w-1/2 mt-4 bg-red-600 text-white text-sm px-4 py-4 rounded-full">
                 <h1 className='text-lg font-extrabold'>Continue</h1>
-            </Link> */}
+            </Link>
 
             {/* Checkout Button (continue to stripe payment) */}
-            <button onClick={redirectToCheckout} className="text-lg font-extrabold flex justify-center items-center w-1/2 mt-4 bg-red-600 text-white px-4 py-4 rounded-full">
+            {/* <button onClick={redirectToCheckout} className="text-lg font-extrabold flex justify-center items-center w-1/2 mt-4 bg-red-600 text-white px-4 py-4 rounded-full">
                 Checkout
-            </button>
+            </button> */}
 
             {/* Go back to menu */}
             <Link to="/" className="flex justify-center items-center w-1/2 mt-2 mb-5 bg-slate-400 text-white text-sm py-4 rounded-full">
