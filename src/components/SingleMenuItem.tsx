@@ -1,7 +1,7 @@
 import { useContext, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { CartContext } from '../contexts/CartContext';
-import { CartItemDTO, CartItemType, MenuItemDTO } from '../utils/models';
+import { CartItemDTO, MenuItemDTO } from '../utils/models';
 
 const SingleMenuItem: React.FC<MenuItemDTO> = (menuItem) => {
 
@@ -23,11 +23,9 @@ const SingleMenuItem: React.FC<MenuItemDTO> = (menuItem) => {
             }
         }
         let newCartItem = new CartItemDTO();
-        newCartItem.type = CartItemType.NonCombo;
         newCartItem.title = menuItem.title;
         newCartItem.price = menuItem.price * parseInt(quantityInput.current.value);
         newCartItem.count = parseInt(quantityInput.current.value);
-        newCartItem.content = null;
         setCartItems([...cartItems, newCartItem]);
         toast.success(quantityInput.current.value + ' ' + menuItem.title + ' added to cart');
     }

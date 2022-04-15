@@ -1,33 +1,22 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { createRef, useContext, useEffect, useRef, useState } from 'react';
 import { db } from '../utils/firebase';
 import { collection, doc, getDocs, orderBy, query, setDoc, where } from "firebase/firestore";
 import SingleMenuItem from '../components/SingleMenuItem';
-import { CartItemDTO, Category, ComboItem, MenuItemDTO } from '../utils/models';
+import { CartItemDTO, Category, MenuItemDTO } from '../utils/models';
 import { CartContext } from '../contexts/CartContext';
 import { Link } from 'react-router-dom';
-import ComboConfig from '../components/ComboConfig';
-import ComboForm from '../components/ComboForm';
 
 const Home = () => {
 
     // General References
     const { cartItems, _ } = useContext(CartContext);
-    const [activeTab, setActiveTab] = useState<Category>(Category.Combo);
-    const [singleMenuItems, setSingleMenuItems] = useState<MenuItemDTO[]>([]);
-    const [beverageMenuItems, setBeverageMenuItems] = useState<MenuItemDTO[]>([]);
-    const comboSection = useRef<null | HTMLHeadingElement>(null);
-    const singleSection = useRef<null | HTMLHeadingElement>(null);
-    const beverageSection = useRef<null | HTMLHeadingElement>(null);
+    const [activeTab, setActiveTab] = useState<Category>(Category.SpecialityWrap);
+    const [menuItems, setMenuItems] = useState<any>([]);
     const [popUpVisible, setPopUpVisible] = useState(false);
-
-    // Combo References
-    const [meatComboItems, setMeatComboItems] = useState<MenuItemDTO[]>([]);
-    const [vegetableComboItems, setVegetableComboItems] = useState<MenuItemDTO[]>([]);
-    const [selectedCombo, setSelectedCombo] = useState<ComboItem[] | null>(null);
+    const elementsRef = useRef(Array.from(Array(8).keys()).map(() => createRef()));
 
     useEffect(() => {
         getAllMenuItems();
-        observeSectionViewChangeOnScroll();
     }, []);
 
 
@@ -37,12 +26,17 @@ const Home = () => {
             res.forEach((doc: any) => {
                 allItems.push({ ...doc.data(), id: doc.id });
             });
-            setMeatComboItems(allItems.filter((item: MenuItemDTO) => item.category === Category.Combo && item.type === "meat"));
-            setVegetableComboItems(allItems.filter((item: MenuItemDTO) => item.category === Category.Combo && item.type === "vegetable"));
 
-            // Test References
-            setSingleMenuItems(allItems.filter((item: MenuItemDTO) => item.category === Category.Single));
-            setBeverageMenuItems(allItems.filter((item: MenuItemDTO) => item.category === Category.Beverage));
+            let newMenuItems: any = {};
+            allItems.forEach((menuItem: MenuItemDTO) => {
+                if (menuItem.category in newMenuItems) {
+                    newMenuItems[menuItem.category].push(menuItem);
+                } else {
+                    newMenuItems[menuItem.category] = [menuItem];
+                }
+            })
+            setMenuItems(newMenuItems);
+            observeSectionViewChangeOnScroll();
         });
     }
 
@@ -51,104 +45,65 @@ const Home = () => {
             const entry = entries[0];
             if ((entry.boundingClientRect.top > window.innerHeight / 2)) return;
             const intersectedSection: any = entry.target.classList[0];
-            if (intersectedSection === "comboSection") setActiveTab(Category.Combo);
-            else if (intersectedSection === "singleSection") setActiveTab(entry.isIntersecting ? Category.Combo : Category.Single);
-            else if (intersectedSection === "beverageSection") setActiveTab(entry.isIntersecting ? Category.Single : Category.Beverage);
-        }, { rootMargin: "-200px 10px 0px 10px" });
-        oberserver.observe(singleSection.current as HTMLHeadingElement);
-        oberserver.observe(comboSection.current as HTMLHeadingElement);
-        oberserver.observe(beverageSection.current as HTMLHeadingElement);
+            setActiveTab(parseInt(intersectedSection));
+        }, { rootMargin: "-170px 0px 0px 0px", threshold:[0, 1] });
+        elementsRef.current.forEach((section: any) => {
+            oberserver.observe(section.current as HTMLHeadingElement);
+        });
     }
 
-    const scrollToSection = (tab: Category) => {
-        let y;
-        switch (tab) {
-            case Category.Combo:
-                window.scrollTo({ top: -70, behavior: 'smooth' });
-                break;
-            case Category.Single:
-                y = (singleSection.current?.getBoundingClientRect().top as number) - 160;
-                window.scrollBy({ top: y, behavior: 'smooth' });
-                break;
-            case Category.Beverage:
-                y = (beverageSection.current?.getBoundingClientRect().top as number) - 160;
-                window.scrollBy({ top: y, behavior: 'smooth' });
-                break;
+    const scrollToSection = (category: Category) => {
+        if (category == Category.SpecialityWrap) {
+            window.scrollTo({ top: -70, behavior: 'smooth' });
+            return;
         }
+        let y = ((elementsRef.current[category] as any).current?.getBoundingClientRect().top as number) - 155;
+        window.scrollBy({ top: y, behavior: 'smooth' });
+    }
+
+    const getCategoryName = (category: Category) => {
+        if (category == 0) return "Speciality Wrap (16'')";
+        else if (category == 1) return "Manouche (12'')";
+        else if (category == 2) return "Les Oeufs";
+        else if (category == 3) return "Our Special Sub";
+        else if (category == 4) return "Side";
+        else if (category == 5) return "Cold Dishes";
+        else if (category == 6) return "Desserts";
+        else if (category == 7) return "Beverages";
     }
 
     const closePopUp = () => {
         setPopUpVisible(false);
-        setSelectedCombo(null);
     }
 
     return (
         <div className={`App ${popUpVisible ? 'overflow-hidden' : ''}`}>
             <div className='w-full fixed top-0 z-10'>
                 {/* Hero Area */}
-                <div className='hero-area relative flex justify-center items-center'></div>
+                <div className='hero-area relative flex justify-center items-center' />
 
                 {/* Navigation Bar*/}
-                <div className="w-full mb-1 flex flex-row items-center justify-between bg-gray-100">
-                    <ul className="w-full grid grid-cols-3">
-                        <button onClick={() => scrollToSection(Category.Combo)} className={"w-full mr-3 text-center block border rounded-r py-2 px-4 " + (activeTab === Category.Combo ? "bg-red-500 border-red-500 text-white" : "bg-gray-100 border-none")}>
-                            Combos
+                <div className="navigation-wrapper overflow-x-scroll whitespace-nowrap w-full mb-1 flex flex-row items-center justify-between bg-gray-100">
+                    {Array.from(Array(8).keys()).map((category: Category) => (
+                        <button key={category} onClick={() => scrollToSection(category)} className={"w-fit-content max-w-xs mr-3 text-center block border py-2 px-4 " + (category==0 ? "rounded-r " : category==7 ? "rounded-l " : "rounded ") + (activeTab === category ? "bg-red-500 border-red-500 text-white" : "bg-gray-100 border-none")}>
+                            {getCategoryName(category)}
                         </button>
-                        <button onClick={() => scrollToSection(Category.Single)} className={"w-full mr-3 text-center block border rounded py-2 px-4 " + (activeTab === Category.Single ? "bg-red-500 border-red-500 text-white" : "bg-gray-100 border-none")}>
-                            Singles
-                        </button>
-                        <button onClick={() => scrollToSection(Category.Beverage)} className={"w-full mr-3 text-center block border rounded-l py-2 px-4 " + (activeTab === Category.Beverage ? "bg-red-500 border-red-500 text-white" : "bg-gray-100 border-none")}>
-                            Beverages
-                        </button>
-                    </ul>
+                    ))}
                 </div>
             </div>
 
             {/* Body */}
             <div className="w-11/12 pb-24 mt-40">
-
-                <h1 ref={comboSection} className='comboSection text-3xl font-bold'>Combos</h1>
-                {[...Array(4)].map((el: any, idx: number) => (
-                    <ComboConfig key={idx + 1} comboNumber={idx + 1} selectedCombo={selectedCombo} setSelectedCombo={setSelectedCombo} setPopUpVisible={setPopUpVisible} />
+                {Object.entries(menuItems).map(([category, categoryItems]: [any, any]) => (
+                    <div key={category}>
+                        <h1 ref={elementsRef.current[category] as any} className={`${category} text-3xl font-bold mt-5`}>{getCategoryName(category)}</h1>
+                        {
+                            categoryItems.map((item: MenuItemDTO) => (
+                                <SingleMenuItem key={item.id} {...item} />
+                            ))
+                        }
+                    </div>
                 ))}
-
-                <h1 ref={singleSection} className='singleSection text-3xl font-bold mt-5'>Singles</h1>
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {singleMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-
-                <h1 ref={beverageSection} className='beverageSection text-3xl font-bold mt-5'>Beverages</h1>
-                {beverageMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-                {beverageMenuItems.map((item: MenuItemDTO) => (
-                    <SingleMenuItem key={item.id} {...item} />
-                ))}
-
             </div>
 
             {/* View Cart Button */}
@@ -159,11 +114,11 @@ const Home = () => {
                     <h1 className='text-lg font-extrabold'>{cartItems.reduce((a: number, b: CartItemDTO) => a + b.count, 0)}</h1>
                 </Link>
             </div>
-            
+
             {/* Pop up View */}
             <div onClick={closePopUp} className={`fixed z-30 inset-0 bg-gray-900 opacity-60 ${popUpVisible ? '' : 'hidden'}`} />
             <div className={`overflow-scroll px-3 fixed z-40 bottom-0 w-full rounded-t-lg bg-white ${popUpVisible ? 'slide-up' : 'slide-down'}`}>
-                <ComboForm meatComboItems={meatComboItems} vegetableComboItems={vegetableComboItems} selectedCombo={selectedCombo} setSelectedCombo={setSelectedCombo} setPopUpVisible={setPopUpVisible} />
+                {/* <ComboForm meatComboItems={meatComboItems} vegetableComboItems={vegetableComboItems} selectedCombo={selectedCombo} setSelectedCombo={setSelectedCombo} setPopUpVisible={setPopUpVisible} /> */}
             </div>
 
         </div>
