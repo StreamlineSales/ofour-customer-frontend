@@ -19,19 +19,19 @@ const CartItem: React.FC<CartItemProps> = ({ cartItem, subtotalState }) => {
         toast.success('Removed from cart') // Toast message
         let newCartItems = cartItems.filter((item: CartItemDTO) => item !== cartItem);
         setCartItems(newCartItems);
-        // let newSubtotal = subtotal - cartItem.price;
-        // setSubtotal(newSubtotal);
+        let newSubtotal = subtotal - cartItem.unit_amount*cartItem.quantity;
+        setSubtotal(newSubtotal);
         if (newCartItems.length === 0) navigate("/");
     }
 
     return (
         <div className="w-full flex justify-between items-center p-4 border-b">
             <div className='w-3/5'>
-                <h1 className='text-xl'>{cartItem.price}</h1>
+                <h1 className='text-xl'>{cartItem.name}</h1>
             </div>
             <div className='flex justify-around items-center w-2/5'>
                 <p>x{cartItem.quantity}</p>
-                {/* <p>{cartItem.price}CAD</p> */}
+                <p>{(cartItem.unit_amount*cartItem.quantity).toFixed(2)}CAD</p>
                 <i onClick={removeCartItem} className="fa-solid fa-trash-can"></i>
             </div>
         </div>

@@ -24,6 +24,8 @@ const SingleMenuItem: React.FC<MenuItemDTO> = (menuItem) => {
         let newCartItem = new CartItemDTO();
         newCartItem.price = menuItem.stripePriceId;
         newCartItem.quantity = parseInt(quantityInput.current.value);
+        newCartItem.name = menuItem.name;
+        newCartItem.unit_amount = menuItem.price;
         setCartItems([...cartItems, newCartItem]);
         toast.success(quantityInput.current.value + ' ' + menuItem.name + ' added to cart');
     }

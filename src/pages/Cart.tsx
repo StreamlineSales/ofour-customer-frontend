@@ -11,13 +11,14 @@ const Cart = () => {
     const [subtotal, setSubtotal] = useState<number>(0);
 
     useEffect(() => {
-        let newSubtotal: any = cartItems.length !== 0 ? Object.values(cartItems).reduce((curr: number, item: any): any => curr + 1, 0) : 0;
+        let newSubtotal: any = cartItems.length !== 0 ? Object.values(cartItems).reduce((curr: number, item: any): any => curr + item.unit_amount, 0) : 0;
         setSubtotal(newSubtotal);
     }, []);
 
     const redirectToCheckout = async () => {
+        const lineItems = cartItems.map((cartItem: CartItemDTO) => { return { price: cartItem.price, quantity: cartItem.quantity };});
         const checkoutOptions = {
-            lineItems: cartItems,
+            lineItems: lineItems,
             mode: "payment",
             successUrl: `${window.location.origin}`,
             cancelUrl: `${window.location.origin}/checkout`

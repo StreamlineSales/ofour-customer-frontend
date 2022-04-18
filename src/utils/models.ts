@@ -44,6 +44,8 @@ export class OrderDTO {
 
 // Cart Item
 export class CartItemDTO {
+    name!: string;
+    unit_amount!: number;
     price!: string;
     quantity!: number;
 }
