@@ -30,7 +30,7 @@ const Order = () => {
         nameRef.current.value = localStorage.getItem("name");
         emailRef.current.value = localStorage.getItem("email") ? JSON.parse(localStorage.getItem("email") as string) : "";
         phoneNumberRef.current.value = localStorage.getItem("phoneNumber") ? JSON.parse(localStorage.getItem("phoneNumber") as string) : "";
-        getDocs(query(collection(db, "orders-" + process.env.NODE_ENV), orderBy("orderNumber", "desc"))).then((res: any) => {
+        getDocs(query(collection(db, "orders"), orderBy("orderNumber", "desc"))).then((res: any) => {
             if (res.docs) setNextOrderNumber(res.docs[0].data().orderNumber + 1);
         });
     }, []);
@@ -69,7 +69,7 @@ const Order = () => {
         newOrder.email = emailRef.current.value;
         newOrder.phoneNumber = phoneNumberRef.current.value;
         newOrder.instructions = instructionsRef.current.value;
-        newOrder.cartItems = cartItems.map((item: any) => { return { ...item }; });
+        newOrder.lineItems = cartItems.map((item: any) => { return { ...item }; });
         newOrder.dateCreated = new Date();
         newOrder.dateCompleted = null;
         newOrder.totalPrice = totalPrice;
@@ -149,23 +149,24 @@ const Order = () => {
                     </Link>
                 </>
                 :
+                <></>
                 // Order Placed
-                <div className="flex flex-col items-center rounded px-4 py-4 shadow-md w-11/12 mb-2">
-                    <h1 className="text-center text-3xl font-bold w-full">Order Summary</h1>
-                    <p className="text-center mb-1 text-xl w-full">Order #: <span className="font-bold">{nextOrderNumber}</span></p>
-                    {cartItems.map((cartItem: CartItemDTO, idx: number) => (
-                        <div key={idx} className="w-full flex justify-between items-center p-4 border-t">
-                            <div className='w-3/5'>
-                                <h1 className='text-xl'>{cartItem.title}</h1>
-                            </div>
-                            <div className='flex justify-around items-center w-2/5'>
-                                <p>x{cartItem.count}</p>
-                                <p>{cartItem.price}CAD</p>
-                            </div>
-                        </div>
-                    ))}
-                    <p className="w-full text-xl font-semibold border-t pt-2 pl-4">Total: {totalPrice} CAD</p>
-                </div>
+                // <div className="flex flex-col items-center rounded px-4 py-4 shadow-md w-11/12 mb-2">
+                //     <h1 className="text-center text-3xl font-bold w-full">Order Summary</h1>
+                //     <p className="text-center mb-1 text-xl w-full">Order #: <span className="font-bold">{nextOrderNumber}</span></p>
+                //     {cartItems.map((cartItem: CartItemDTO, idx: number) => (
+                //         <div key={idx} className="w-full flex justify-between items-center p-4 border-t">
+                //             <div className='w-3/5'>
+                //                 <h1 className='text-xl'>{cartItem.title}</h1>
+                //             </div>
+                //             <div className='flex justify-around items-center w-2/5'>
+                //                 <p>x{cartItem.count}</p>
+                //                 <p>{cartItem.price}CAD</p>
+                //             </div>
+                //         </div>
+                //     ))}
+                //     <p className="w-full text-xl font-semibold border-t pt-2 pl-4">Total: {totalPrice} CAD</p>
+                // </div>
             }
         </div>
     );

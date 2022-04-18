@@ -16,13 +16,17 @@ export enum Category {
 }
 
 export class MenuItemDTO {
-    id!: string;
-    title!: string; // always
+    id?: string;
+    name!: string; // always
     category!: Category; // always
     price!: number; // if category != Combo
     description!: string; // always
-    image!: string | null; // if category != Combo
+    image?: string | null; // if category != Combo
     visibility?: boolean; // always
+    active!: boolean;
+    createdAt!: any;
+    stripeProductId!: string;
+    stripePriceId!: string;
 }
 
 // Order
@@ -31,7 +35,7 @@ export class OrderDTO {
     email!: string;
     phoneNumber!: string;
     instructions?: string;
-    cartItems!: CartItemDTO[];
+    lineItems!: CartItemDTO[];
     dateCreated!: Date;
     dateCompleted?: Date | null;
     totalPrice!: number;
@@ -40,7 +44,6 @@ export class OrderDTO {
 
 // Cart Item
 export class CartItemDTO {
-    title!: string; // always
-    price!: number; // always
-    count!: number; // always
+    price!: string;
+    quantity!: number;
 }

@@ -21,7 +21,7 @@ const Home = () => {
 
 
     const getAllMenuItems: any = () => {
-        getDocs(query(collection(db, "menu-items-" + process.env.NODE_ENV), where("visibility", "==", true))).then((res: any) => {
+        getDocs(query(collection(db, "menu-items-stripe"), where("visibility", "==", true))).then((res: any) => {
             let allItems: any[] = [];
             res.forEach((doc: any) => {
                 allItems.push({ ...doc.data(), id: doc.id });
@@ -111,15 +111,15 @@ const Home = () => {
                 <Link to='/checkout' className="shadow-xl flex justify-between items-center w-80 bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-4 rounded-full">
                     <i className="fa-solid fa-lg fa-cart-shopping"></i>
                     <h1 className='text-lg font-extrabold'>View Cart</h1>
-                    <h1 className='text-lg font-extrabold'>{cartItems.reduce((a: number, b: CartItemDTO) => a + b.count, 0)}</h1>
+                    <h1 className='text-lg font-extrabold'>{cartItems.reduce((a: number, b: CartItemDTO) => a + b.quantity, 0)}</h1>
                 </Link>
             </div>
 
             {/* Pop up View */}
-            <div onClick={closePopUp} className={`fixed z-30 inset-0 bg-gray-900 opacity-60 ${popUpVisible ? '' : 'hidden'}`} />
+            {/* <div onClick={closePopUp} className={`fixed z-30 inset-0 bg-gray-900 opacity-60 ${popUpVisible ? '' : 'hidden'}`} />
             <div className={`overflow-scroll px-3 fixed z-40 bottom-0 w-full rounded-t-lg bg-white ${popUpVisible ? 'slide-up' : 'slide-down'}`}>
-                {/* <ComboForm meatComboItems={meatComboItems} vegetableComboItems={vegetableComboItems} selectedCombo={selectedCombo} setSelectedCombo={setSelectedCombo} setPopUpVisible={setPopUpVisible} /> */}
-            </div>
+                <ComboForm meatComboItems={meatComboItems} vegetableComboItems={vegetableComboItems} selectedCombo={selectedCombo} setSelectedCombo={setSelectedCombo} setPopUpVisible={setPopUpVisible} />
+            </div> */}
 
         </div>
     );

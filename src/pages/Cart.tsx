@@ -11,30 +11,21 @@ const Cart = () => {
     const [subtotal, setSubtotal] = useState<number>(0);
 
     useEffect(() => {
-        let newSubtotal: any = cartItems.length !== 0 ? Object.values(cartItems).reduce((curr: number, item: any): any => curr + item.price, 0) : 0;
+        let newSubtotal: any = cartItems.length !== 0 ? Object.values(cartItems).reduce((curr: number, item: any): any => curr + 1, 0) : 0;
         setSubtotal(newSubtotal);
     }, []);
 
-    const item = {
-        price: "price_1KkLsXKvlpwmSssgP52DD4S7",
-        quantity: 1
-    }
-
-    const checkoutOptions = {
-        lineItems: [item],
-        mode: "payment",
-        successUrl: `${window.location.origin}/checkout/success`,
-        cancelUrl: `${window.location.origin}/checkout`
-    }
-
     const redirectToCheckout = async () => {
+        const checkoutOptions = {
+            lineItems: cartItems,
+            mode: "payment",
+            successUrl: `${window.location.origin}`,
+            cancelUrl: `${window.location.origin}/checkout`
+        }
         console.log("redirectToCheckout");
         const stripe: any = await loadStripe(process.env.REACT_APP_STRIPE_KEY?.toString() as string);
         await stripe.redirectToCheckout(checkoutOptions);
     }
-
-    // Flow: Create product => store id in firebase 
-    // menu item: { stripeStatus, id }
 
     return (
         <div className="App">
@@ -85,15 +76,10 @@ const Cart = () => {
                 </div>
             </div>
 
-            {/* Continue Button (continue without payment) */}
-            <Link to="/order" className="flex justify-center items-center w-1/2 mt-4 bg-red-600 text-white text-sm px-4 py-4 rounded-full">
-                <h1 className='text-lg font-extrabold'>Continue</h1>
-            </Link>
-
             {/* Checkout Button (continue to stripe payment) */}
-            {/* <button onClick={redirectToCheckout} className="text-lg font-extrabold flex justify-center items-center w-1/2 mt-4 bg-red-600 text-white px-4 py-4 rounded-full">
+            <button onClick={redirectToCheckout} className="text-lg font-extrabold flex justify-center items-center w-1/2 mt-4 bg-red-600 text-white px-4 py-4 rounded-full">
                 Checkout
-            </button> */}
+            </button>
 
             {/* Go back to menu */}
             <Link to="/" className="flex justify-center items-center w-1/2 mt-2 mb-5 bg-slate-400 text-white text-sm py-4 rounded-full">
