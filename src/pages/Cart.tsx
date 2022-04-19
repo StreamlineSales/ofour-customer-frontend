@@ -4,6 +4,7 @@ import { CartItemDTO } from "../utils/models";
 import CartItem from '../components/CartItem';
 import { Link } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
+import toast from "react-hot-toast";
 
 const Cart = () => {
 
@@ -16,6 +17,10 @@ const Cart = () => {
     }, []);
 
     const redirectToCheckout = async () => {
+        if (cartItems.length === 0) {
+            toast.error("No cart items to checkout");
+            return;
+        }
         const lineItems = cartItems.map((cartItem: CartItemDTO) => { return { price: cartItem.price, quantity: cartItem.quantity };});
         const checkoutOptions = {
             lineItems: lineItems,
@@ -23,8 +28,7 @@ const Cart = () => {
             successUrl: `${window.location.origin}`,
             cancelUrl: `${window.location.origin}/checkout`
         }
-        console.log("redirectToCheckout");
-        const stripe: any = await loadStripe(process.env.REACT_APP_STRIPE_KEY?.toString() as string);
+        const stripe: any = await loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY?.toString() as string);
         await stripe.redirectToCheckout(checkoutOptions);
     }
 
@@ -76,6 +80,10 @@ const Cart = () => {
                     </div>
                 </div>
             </div>
+            
+            <Link to="/stripeorder" className="flex justify-center items-center w-1/2 mt-4 bg-red-600 text-white text-sm px-4 py-4 rounded-full">
+                <h1 className='text-lg font-extrabold'>Continue</h1>
+            </Link>
 
             {/* Checkout Button (continue to stripe payment) */}
             <button onClick={redirectToCheckout} className="text-lg font-extrabold flex justify-center items-center w-1/2 mt-4 bg-red-600 text-white px-4 py-4 rounded-full">

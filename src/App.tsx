@@ -8,6 +8,7 @@ import Cart from './pages/Cart';
 import Order from './pages/Order';
 import { Toaster } from 'react-hot-toast';
 import * as smoothscroll from 'smoothscroll-polyfill';
+import StripeOrder from './pages/StripeOrder';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/checkout" element={<Cart />} />
           <Route path="/order" element={<Order />} />
+          <Route path="/stripeorder" element={<StripeOrder />} />
         </Routes>
         <Toaster/>
       </CartContext.Provider>
