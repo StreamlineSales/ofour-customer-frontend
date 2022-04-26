@@ -6,10 +6,11 @@ import { CartItemDTO } from '../utils/models';
 
 interface CartItemProps {
     cartItem: CartItemDTO,
-    subtotalState: any
+    subtotalState: any,
+    orderPlaced: boolean
 }
 
-const CartItem: React.FC<CartItemProps> = ({ cartItem, subtotalState }) => {
+const CartItem: React.FC<CartItemProps> = ({ cartItem, subtotalState, orderPlaced }) => {
 
     const { cartItems, setCartItems } = useContext(CartContext);
     const { subtotal, setSubtotal } = subtotalState;
@@ -19,7 +20,7 @@ const CartItem: React.FC<CartItemProps> = ({ cartItem, subtotalState }) => {
         toast.success('Removed from cart') // Toast message
         let newCartItems = cartItems.filter((item: CartItemDTO) => item !== cartItem);
         setCartItems(newCartItems);
-        let newSubtotal = subtotal - cartItem.unit_amount*cartItem.quantity;
+        let newSubtotal = subtotal - cartItem.unitAmount*cartItem.quantity;
         setSubtotal(newSubtotal);
         if (newCartItems.length === 0) navigate("/");
     }
@@ -31,8 +32,8 @@ const CartItem: React.FC<CartItemProps> = ({ cartItem, subtotalState }) => {
             </div>
             <div className='flex justify-around items-center w-2/5'>
                 <p>x{cartItem.quantity}</p>
-                <p>{(cartItem.unit_amount*cartItem.quantity).toFixed(2)}CAD</p>
-                <i onClick={removeCartItem} className="fa-solid fa-trash-can"></i>
+                <p>{(cartItem.unitAmount*cartItem.quantity).toFixed(2)}CAD</p>
+                <i onClick={removeCartItem} className={`fa-solid fa-trash-can ${orderPlaced ? 'hidden' : ''}`}></i>
             </div>
         </div>
     );

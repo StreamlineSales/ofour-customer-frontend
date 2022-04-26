@@ -31,13 +31,12 @@ export class MenuItemDTO {
 
 // Order
 export class OrderDTO {
+    id!: string;
     name!: string;
     email!: string;
-    phoneNumber!: string;
-    instructions?: string;
-    lineItems!: CartItemDTO[];
-    dateCreated!: Date;
-    dateCompleted?: Date | null;
+    lineItems!: any[];
+    dateCreated!: any;
+    dateCompleted?: any | null;
     totalPrice!: number;
     orderNumber!: number;
 }
@@ -45,7 +44,7 @@ export class OrderDTO {
 // Cart Item
 export class CartItemDTO {
     name!: string;
-    unit_amount!: number;
-    price!: string;
+    unitAmount!: number;
     quantity!: number;
+    stripePriceId!: string;
 }
