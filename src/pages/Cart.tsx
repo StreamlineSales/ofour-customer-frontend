@@ -17,7 +17,7 @@ const Cart = () => {
     const [orderNumber, setOrderNumber] = useState<number>(1);
 
     useEffect(() => {
-        let newSubtotal: any = cartItems.length !== 0 ? Object.values(cartItems).reduce((curr: number, item: any): any => curr + item.unitAmount, 0) : 0;
+        let newSubtotal: any = cartItems.length !== 0 ? Object.values(cartItems).reduce((curr: number, item: any): any => curr + item.unitAmount*item.quantity, 0) : 0;
         setSubtotal(newSubtotal);
     }, []);
 
