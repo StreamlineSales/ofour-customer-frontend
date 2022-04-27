@@ -5,13 +5,12 @@ import { CartContext } from './contexts/CartContext';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
-import Order from './pages/Order';
 import { Toaster } from 'react-hot-toast';
 import * as smoothscroll from 'smoothscroll-polyfill';
 
 function App() {
 
-  const [cartItems, setCartItems] = useState<CartItemDTO[]>([]);
+  const [cartItems, setCartItems] = useState<any[]>([]);
   
   useEffect(() => {
     smoothscroll.polyfill();
@@ -22,8 +21,7 @@ function App() {
       <CartContext.Provider value={{ cartItems, setCartItems }}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/checkout" element={<Cart />} />
-          <Route path="/order" element={<Order />} />
+          <Route path="/cart" element={<Cart />} />
         </Routes>
         <Toaster/>
       </CartContext.Provider>

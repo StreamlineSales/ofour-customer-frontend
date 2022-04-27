@@ -13,21 +13,21 @@ const SingleMenuItem: React.FC<MenuItemDTO> = (menuItem) => {
 
         menuCard.current.checked = false; // uncheck the checkbox
         for (let i = 0; i < cartItems.length; i++) { // check if item already exists in cart
-            if (cartItems[i].title === menuItem.title) { // if item already exists in cart
-                cartItems[i].count += parseInt(quantityInput.current.value); // add quantity to existing item
-                cartItems[i].price += menuItem.price * parseInt(quantityInput.current.value); // add price to existing item
+            if (cartItems[i].stripePriceId === menuItem.stripePriceId) { // if item already exists in cart
+                cartItems[i].quantity += parseInt(quantityInput.current.value); // add quantity to existing item
                 setCartItems([...cartItems]);
-                toast.success(quantityInput.current.value + ' ' + menuItem.title + ' added to cart');
+                toast.success(quantityInput.current.value + ' ' + menuItem.name + ' added to cart');
                 menuCard.current.checked = false;
                 return;
             }
         }
         let newCartItem = new CartItemDTO();
-        newCartItem.title = menuItem.title;
-        newCartItem.price = menuItem.price * parseInt(quantityInput.current.value);
-        newCartItem.count = parseInt(quantityInput.current.value);
+        newCartItem.name = menuItem.name;
+        newCartItem.unitAmount = menuItem.price;
+        newCartItem.quantity = parseInt(quantityInput.current.value);
+        newCartItem.stripePriceId = menuItem.stripePriceId;
         setCartItems([...cartItems, newCartItem]);
-        toast.success(quantityInput.current.value + ' ' + menuItem.title + ' added to cart');
+        toast.success(quantityInput.current.value + ' ' + menuItem.name + ' added to cart');
     }
 
     return (
@@ -35,7 +35,7 @@ const SingleMenuItem: React.FC<MenuItemDTO> = (menuItem) => {
             <input ref={menuCard} type="checkbox" name="card" id={`${"item-" + menuItem.id}`} className="hidden" />
             <label htmlFor={`${"item-" + menuItem.id}`} className="flex p-4">
                 <div className="w-2/3 flex flex-col items-start justify-start pr-2">
-                    <h1 className="text-xl font-medium">{menuItem.title}</h1>
+                    <h1 className="text-xl font-medium">{menuItem.name}</h1>
                     <p className="font-normal my-1">{menuItem.price} CAD</p>
                 </div>
                 <div className="w-1/3">
