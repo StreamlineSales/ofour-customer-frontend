@@ -19,7 +19,7 @@ const Home = () => {
         getAllMenuItems();
     }, []);
 
-
+    // get all menu items
     const getAllMenuItems: any = () => {
         getDocs(query(collection(db, "menu-items-stripe"), where("visibility", "==", true))).then((res: any) => {
             let allItems: any[] = [];
@@ -40,19 +40,35 @@ const Home = () => {
         });
     }
 
+    // check if navbar item is in viewport
+    const isInViewport = (el: any) => {
+        const rect = el.current.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    
+        );
+    }
+    
+    // obersve category view change on user scroll
     const observeSectionViewChangeOnScroll = () => {
         const oberserver = new IntersectionObserver((entries) => {
             const entry = entries[0];
             if ((entry.boundingClientRect.top > window.innerHeight / 2)) return;
             const intersectedSection: any = entry.target.classList[0];
             setActiveTab(parseInt(intersectedSection));
-            (navItemsRef.current[parseInt(intersectedSection)] as any).current?.scrollIntoView({ block: "start", inline: "center", behavior: "auto"});
+            if (!isInViewport(navItemsRef.current[parseInt(intersectedSection)] as any)) {
+                (navItemsRef.current[parseInt(intersectedSection)] as any).current?.scrollIntoView({ block: "start", inline: "center", behavior: "auto"});
+            }
         }, { rootMargin: "-170px 0px 0px 0px", threshold: [0, 1] });
         elementsRef.current.forEach((section: any) => {
             oberserver.observe(section.current as HTMLHeadingElement);
         });
     }
 
+    // scroll to given section
     const scrollToSection = (category: Category) => {
         if (category == Category.SpecialityWrap) {
             window.scrollTo({ top: -70, behavior: 'smooth' });
@@ -62,6 +78,7 @@ const Home = () => {
         window.scrollBy({ top: y, behavior: 'smooth' });
     }
 
+    // get category name based on category
     const getCategoryName = (category: Category) => {
         if (category == 0) return "Speciality Wrap (16'')";
         else if (category == 1) return "Manouche (12'')";
