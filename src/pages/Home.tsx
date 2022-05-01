@@ -1,4 +1,4 @@
-import { createRef, useContext, useEffect, useRef, useState } from 'react';
+import React, { createRef, useContext, useEffect, useRef, useState } from 'react';
 import { db } from '../utils/firebase';
 import { collection, doc, getDocs, orderBy, query, setDoc, where } from "firebase/firestore";
 import SingleMenuItem from '../components/SingleMenuItem';
@@ -13,6 +13,7 @@ const Home = () => {
     const [activeTab, setActiveTab] = useState<Category>(Category.SpecialityWrap);
     const [menuItems, setMenuItems] = useState<any>([]);
     const elementsRef = useRef(Array.from(Array(8).keys()).map(() => createRef()));
+    const navItemsRef = useRef(Array.from(Array(8).keys()).map(() => createRef()));
 
     useEffect(() => {
         getAllMenuItems();
@@ -32,7 +33,7 @@ const Home = () => {
                     newMenuItems[menuItem.category].push(menuItem);
                 } else {
                     newMenuItems[menuItem.category] = [menuItem];
-                }
+                } 
             })
             setMenuItems(newMenuItems);
             observeSectionViewChangeOnScroll();
@@ -45,7 +46,8 @@ const Home = () => {
             if ((entry.boundingClientRect.top > window.innerHeight / 2)) return;
             const intersectedSection: any = entry.target.classList[0];
             setActiveTab(parseInt(intersectedSection));
-        }, { rootMargin: "-170px 0px 0px 0px", threshold:[0, 1] });
+            (navItemsRef.current[parseInt(intersectedSection)] as any).current?.scrollIntoView({ block: "start", inline: "center", behavior: "auto"});
+        }, { rootMargin: "-170px 0px 0px 0px", threshold: [0, 1] });
         elementsRef.current.forEach((section: any) => {
             oberserver.observe(section.current as HTMLHeadingElement);
         });
@@ -78,9 +80,10 @@ const Home = () => {
                 <div className='hero-area relative flex justify-center items-center' />
 
                 {/* Navigation Bar*/}
+
                 <div className="navigation-wrapper overflow-x-scroll whitespace-nowrap w-full mb-1 flex flex-row items-center justify-between bg-gray-100">
                     {Array.from(Array(8).keys()).map((category: Category) => (
-                        <button key={category} onClick={() => scrollToSection(category)} className={"w-fit-content max-w-xs mr-3 text-center block border py-2 px-4 " + (category==0 ? "rounded-r " : category==7 ? "rounded-l " : "rounded ") + (activeTab === category ? "bg-red-500 border-red-500 text-white" : "bg-gray-100 border-none")}>
+                        <button ref={navItemsRef.current[category] as any} key={category} onClick={() => scrollToSection(category)} className={"w-fit-content max-w-xs mr-3 text-center block border py-2 px-4 " + (category == 0 ? "rounded-r " : category == 7 ? "rounded-l " : "rounded ") + (activeTab === category ? "bg-red-500 border-red-500 text-white" : "bg-gray-100 border-none")}>
                             {getCategoryName(category)}
                         </button>
                     ))}
@@ -113,6 +116,5 @@ const Home = () => {
         </div>
     );
 }
-
 
 export default Home;

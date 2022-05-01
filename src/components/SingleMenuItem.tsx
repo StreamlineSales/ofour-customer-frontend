@@ -33,13 +33,13 @@ const SingleMenuItem: React.FC<MenuItemDTO> = (menuItem) => {
     return (
         <div className="w-full border-b">
             <input ref={menuCard} type="checkbox" name="card" id={`${"item-" + menuItem.id}`} className="hidden" />
-            <label htmlFor={`${"item-" + menuItem.id}`} className="flex p-4">
-                <div className="w-2/3 flex flex-col items-start justify-start pr-2">
+            <label htmlFor={`${"item-" + menuItem.id}`} className="flex px-4">
+                <div className="w-2/3 flex flex-col items-start justify-start pr-2 py-4">
                     <h1 className="text-xl font-medium">{menuItem.name}</h1>
                     <p className="font-normal my-1">{menuItem.price} CAD</p>
                 </div>
-                <div className="w-1/3">
-                    <img src={menuItem.image as string} alt="" className="h-full max-h-28 rounded" />
+                <div className={`w-1/3 h-full flex justify-end py-2 ${menuItem.image ? "" : "hidden"}`}>
+                    <img src={menuItem.image as string} alt="" className="h-24 w-24 rounded" />
                 </div>
             </label>
             <div className="accordion__content flex flex-row justify-around items-end overflow-hidden bg-grey-lighter px-4">
@@ -50,7 +50,7 @@ const SingleMenuItem: React.FC<MenuItemDTO> = (menuItem) => {
                         <button onClick={() => { if (quantityInput.current.value > 1) quantityInput.current.value = parseInt(quantityInput.current.value) - 1 }} className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-l cursor-pointer outline-none">
                             <span className="m-auto text-2xl font-thin">−</span>
                         </button>
-                        <input defaultValue={1} ref={quantityInput} className="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700"></input>
+                        <input defaultValue={1} ref={quantityInput} className="outline-none text-center w-full bg-gray-300 font-semibold text-md md:text-basecursor-default flex items-center text-gray-700"></input>
                         <button onClick={() => { quantityInput.current.value = parseInt(quantityInput.current.value) + 1 }} data-action="increment" className="bg-gray-300 text-gray-600 hover:text-gray-700 hover:bg-gray-400 h-full w-20 rounded-r cursor-pointer">
                             <span className="m-auto text-2xl font-thin">+</span>
                         </button>
